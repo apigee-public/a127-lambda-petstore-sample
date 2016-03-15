@@ -1,0 +1,45 @@
+{
+  "name": "petstore_awsgateway_api",
+  "version": "0.0.1",
+  "private": "true",
+  "description": "My new Apigee 127 Project",
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "main": "app.js",
+  "dependencies": {
+    "a127-magic": "^0.11.0",
+    "apigee-access": "",
+    "aws-sdk": "^2.2.36",
+    "aws4": "",
+    "express": "3.x.x",
+    "volos-analytics-apigee": "",
+    "volos-analytics-common": "",
+    "volos-analytics-memory": "",
+    "volos-cache-apigee": "",
+    "volos-cache-memory": "",
+    "volos-cache-redis": "",
+    "volos-oauth-apigee": "",
+    "volos-oauth-redis": "",
+    "volos-quota-apigee": "",
+    "volos-quota-memory": "",
+    "volos-quota-redis": "",
+    "volos-spikearrest-memory": "",
+    "chalk": "0.4.0",
+    "minimist": "0.2.0",
+    "node-uuid": "1.4.1",
+    "q": "1.0.1"
+  },
+  "devDependencies": {
+    "should": "4.4.x",
+    "supertest": "0.15.x"
+  },
+  "scripts": {
+    "start": "node app.js"
+  },
+  "api": {
+    "name": "petstore_awsgateway_api",
+    "basePath": "/petstore_awsgateway_api",
+    "main": "app.js"
+  }
+}

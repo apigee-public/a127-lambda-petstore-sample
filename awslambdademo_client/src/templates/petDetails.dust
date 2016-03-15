@@ -1,0 +1,80 @@
+<!-- Page Content -->
+<div class="container">
+
+    <!-- Portfolio Item Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+          <br/>
+            <h1 class="page-header">Pet Details
+            </h1>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <!-- Portfolio Item Row -->
+    <div class="row">
+        <div class="col-lg-12">
+          <div class="col-md-8">
+              <h3>Description</h3>
+              <p>Pet Details for: {petDetail.petId}</p>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <!-- Related Projects Row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">Additional Info</h3>
+        </div>
+
+        <div class="col-sm-2 col-xs-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Pet Type</h3>
+            </div>
+            <div class="panel-body">
+              {petDetail.petType}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-2 col-xs-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Pet Name</h3>
+            </div>
+            <div class="panel-body">
+              {petDetail.petName}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-2 col-xs-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Pet Age</h3>
+            </div>
+            <div class="panel-body">
+              {petDetail.petAge}
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+    <!-- /.row -->
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy; Your Website 2014</p>
+            </div>
+        </div>
+        <!-- /.row -->
+    </footer>
+
+</div>

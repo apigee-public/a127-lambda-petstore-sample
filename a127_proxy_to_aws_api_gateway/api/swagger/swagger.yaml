@@ -1,0 +1,543 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: API Gateway Secure Pet Store
+  description: Pet store sample that uses Cognito Developer Authenticated Identities to generate credentials through a Java Lambda Function
+  version: "1.0.0"
+# the domain of the service
+host: localhost:10010
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /
+produces:
+  - application/json
+paths:
+  /users:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: invoke_apigateway
+    x-a127-apply: {}
+    post:
+      summary: Registers a new user
+      description: |
+        Creates a new user in the DynamoDB backend database and returns a set
+        of temporary credentials to sign future requests.
+      operationId: CreateUserDemoAction
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: NewUser
+          in: body
+          description: New user details.
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - Auth
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:852671426646:function:test-function/invocations
+        credentials: arn:aws:iam::852671426646:role/PetStoreLambdaInvoke
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action" : "com.amazonaws.apigatewaydemo.action.RegisterDemoAction",
+              "body" : $input.json('$')
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+      responses:
+        200:
+          description: The username of the new user and set of temporary credentials
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/RegisterUserResponse'
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - CORS
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Methods : "'*'"
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+            responseTemplates:
+              application/json: |
+                {}
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Headers:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Origin:
+              type: "string"
+  /login:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: invoke_apigateway
+    x-a127-apply: {}
+    post:
+      summary: Login user
+      description: |
+        Verifies the given credentials against the user database and returns a set
+        of new temporary credentials
+      operationId: LoginDemoAction
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: LoginUser
+          in: body
+          description: New user details.
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - Auth
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:852671426646:function:test-function/invocations
+        credentials: arn:aws:iam::852671426646:role/PetStoreLambdaInvoke
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action" : "com.amazonaws.apigatewaydemo.action.LoginDemoAction",
+              "body" : $input.json('$')
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+      responses:
+        200:
+          description: A new set of temporary credentials
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/LoginUserResponse'
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - CORS
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Methods : "'*'"
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+            responseTemplates:
+              application/json: |
+                {}
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Headers:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Origin:
+              type: "string"
+  /pets:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: invoke_apigateway
+    x-a127-apply: {}
+    post:
+      summary: Creates a new pet
+      description: |
+        Creates a new pet object in the datastore
+      operationId: CreatePetDemoAction
+      x-amazon-apigateway-auth:
+        type: aws_iam
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: NewPet
+          in: body
+          description: New pet details.
+          schema:
+            $ref: '#/definitions/NewPet'
+      tags:
+        - Pet Store
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:852671426646:function:test-function/invocations
+        credentials: arn:aws:iam::*:user/*
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action" : "com.amazonaws.apigatewaydemo.action.CreatePetDemoAction",
+              "body" : $input.json('$')
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+      responses:
+        200:
+          description: The unique identifier of the new pet
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/NewPetResponse'
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      summary: List pets
+      description: Retrieve a list of pets in the store
+      operationId: ListPetsDemoAction
+      x-amazon-apigateway-auth:
+        type: aws_iam
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Pet Store
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:852671426646:function:test-function/invocations
+        credentials: arn:aws:iam::*:user/*
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action" : "com.amazonaws.apigatewaydemo.action.ListPetsDemoAction",
+              "body" : $input.json('$')
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+      responses:
+        200:
+          description: A list of pets
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Pets'
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - CORS
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Methods : "'*'"
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+            responseTemplates:
+              application/json: |
+                {}
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Headers:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Origin:
+              type: "string"
+  /pets/{petId}:
+    x-swagger-router-controller: invoke_apigateway
+    x-a127-apply: {}
+    get:
+      description: Returns a user based on a single ID, if the user does not have access to the pet
+      operationId: GetPetDemoAction
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: petId
+          in: path
+          description: ID of pet to fetch
+          required: true
+          type: string
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:852671426646:function:test-function/invocations
+        credentials: arn:aws:iam::*:user/*
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action" : "com.amazonaws.apigatewaydemo.action.GetPetDemoAction",
+              "body" : {
+                "petId" : "$input.params('petId')"
+              }
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+      responses:
+        '200':
+          description: pet response
+          schema:
+            $ref: '#/definitions/Pet'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  User:
+    properties:
+      username:
+        type: string
+        description: A unique username for the user
+      password:
+        type: string
+        description: A password for the new user
+  RegisterUserResponse:
+    properties:
+      username:
+        type: string
+        description: The username of the new user
+      identityId:
+        type: string
+        description: The unique identifier for the new user
+      token:
+        type: string
+        description: An OpenID token for the new user
+      credentials:
+        properties:
+          accessKey:
+            type: string
+            description: Temporary access key to sign requests
+          secretKey:
+            type: string
+            description: Temporary secret access key to sign requests
+          sessionToken:
+            type: string
+            description: Tempoarary session token
+          expiration:
+            type: integer
+            description: |
+              Expiration date of the temporary credentials in millis since 1/1/1970
+  LoginUserResponse:
+    properties:
+      identityId:
+        type: string
+        description: The unique identifier for the new user
+      token:
+        type: string
+        description: An OpenID token for the new user
+      credentials:
+        properties:
+          accessKey:
+            type: string
+            description: Temporary access key to sign requests
+          secretKey:
+            type: string
+            description: Temporary secret access key to sign requests
+          sessionToken:
+            type: string
+            description: Tempoarary session token
+          expiration:
+            type: integer
+            description: |
+              Expiration date of the temporary credentials in millis since 1/1/1970
+  NewPet:
+    properties:
+      petType:
+        type: string
+        description: Free text pet type
+      petName:
+        type: string
+        description: Free text pet name
+      petAge:
+        type: integer
+        description: Age of the new pet
+  NewPetResponse:
+    properties:
+      petId:
+        type: string
+        description: The generated unique identifier for the new pet
+  Pet:
+    properties:
+      petId:
+        type: string
+        description: The generated unique identifier for the new pet
+      petType:
+        type: string
+        description: Free text pet type
+      petName:
+        type: string
+        description: Free text pet name
+      petAge:
+        type: integer
+        description: Age of the new pet
+  Pets:
+    type: object
+    items:
+      $ref: '#/definitions/Pet'
+  Error:
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
