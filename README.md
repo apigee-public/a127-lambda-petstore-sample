@@ -12,29 +12,30 @@ To use the demo you first need to provide your AWS access credentials. For this 
 
 You should see output like this:
 
-Enter host password for user 'nwalters@apigee.com':
-{<br>
-  "name" : "awscreds"<br>
-}Enter host password for user 'nwalters@apigee.com':<br>
-{<br>
-  "name" : "awscreds",<br>
-  "value" : "*****"<br>
-}Enter host password for user 'nwalters@apigee.com':<br>
-{<br>
-  "name" : "awscreds",<br>
-  "value" : "*****"<br>
-}Enter host password for user 'nwalters@apigee.com':<br>
-{<br>
-  "name" : "awscreds",<br>
-  "value" : "*****"<br>
-}<br>
+Enter host password for user 'xxxx@apigee.com':</br>
+{</br>
+  "name" : "awscreds",</br>
+  "value" : "*****"</br>
+}Enter host password for user 'xxxx@apigee.com':</br>
+{</br>
+  "name" : "awscreds",</br>
+  "value" : "*****"</br>
+}Enter host password for user 'xxxx@apigee.com':</br>
+{</br>
+  "name" : "awscreds",</br>
+  "value" : "*****"</br>
+}Enter host password for user 'xxxx@apigee.com':</br>
+{</br>
+  "name" : "awscreds",</br>
+  "value" : "*****"</br>
+}</br>
 
 
 Next you need to install the required packages for the proxies with the npm tool. Open a terminal window and go into the <b><i>a127_proxy_to_lambda</b></i> folder and run:
 
 <b><i>npm install</b></i>
 
-You should now have a fully functional proxy, the final step is to deploy it up to Apigee so you can start testing with it. If you don't have it already, install a127 ('<b><i>npm install -g a127</b></i>'), configure it to point at your organisation for deployment ('<b><i>a127 account create <my-account</b></i> and then follow the prompts) and from the a127_proxy_to_lambda folder run:
+You should now have a fully functional proxy, the final step is to deploy it up to Apigee so you can start testing with it. If you don't have it already, install a127 ('<b><i>npm install -g a127</b></i>'), configure it to point at your organisation for deployment ('<b><i>a127 account create &lt;my-account&gt;</i></b>' and then follow the prompts) and from the <b><i>a127_proxy_to_lambda</i></b> folder run:
 
 <b><i>a127 project deploy --upload</b></i>
 
@@ -42,12 +43,12 @@ You should now have a working proxy deployed to Edge that can invoke AWS lambda 
 
 Repeat the above two steps in the <b><i>a127_proxy_to_aws_api_gateway</b></i> folder. Note that for this to work you will need to be deploying this to an Apigee organisation that has SNI enabled.
 
-You can test out the 2 proxies using the sample client. You will need bower to setup the client, if you don't have it then install it with '<b></>npm install -g bower</b></i>'. To configure the client, go into the <b><i>awslamdademo_client</b></i> folder, and run the following commands:
+You can test out the 2 proxies using the sample client. You will need bower to setup the client, if you don't have it then install it with '<b><i>npm install -g bower</b></i>'. To configure the client, go into the <b><i>awslamdademo_client</b></i> folder, and run the following commands:
 
 <b><i>bower install<br>
 npm install gulp<br>
 npm install --save-dev gulp-uglify gulp-dust gulp-flatten del gulp-bower gulp-concat gulp-sourcemaps gulp-serve vinyl-paths gulp-strip-debug</b></i>
 
-Next, open up the <b><i>src/lib/appLogic.js</b></i> and change the base_url at the top of the file to match either the base url for the a127_proxy_to_lambda or the <b><i>a127_proxy_to_aws_api_gateway</b></i> proxy.
+Next, open up the <b><i>src/lib/appLogic.js</b></i> and change the base_url at the top of the file to match either the base url for the <b><i>a127_proxy_to_lambda</b></i> or the <b><i>a127_proxy_to_aws_api_gateway</b></i> proxy.
 
-Launch the demo client by running 'gulp'. You should now be able to access the client by opening a browser and pointing at 'http://localhost:3000/'. If you want you can start session tracing via the Edge UI whilst you use the client to exercise the API. You can also edit the <b><i>src/lib/appLogic.js</b></i> to switch between the a127_proxy_to_lambda or the a127_proxy_to_aws_api_gateway proxy. These changes will be automatically picked up.
+Launch the demo client by running 'gulp'. You should now be able to access the client by opening a browser and pointing at 'http://localhost:3000/'. If you want you can start session tracing via the Edge UI whilst you use the client to exercise the API. You can also edit the <b><i>src/lib/appLogic.js</b></i> to switch between the <b><i>a127_proxy_to_lambda</b></i> or the <b><i>a127_proxy_to_aws_api_gateway</b></i> proxy. These changes will be automatically picked up.
